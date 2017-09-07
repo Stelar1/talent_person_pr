@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<!-- 取别名 -->
+	<typeAliases>
+		<typeAlias type="com.wls.entity.User" alias="user"/>
+		<typeAlias type="com.wls.entity.UserInf" alias="userinf"/>
+		<typeAlias type="com.wls.entity.Recruit" alias="recruit"/>
+		<typeAlias type="com.wls.entity.Company" alias="company"/>
+	</typeAliases>
+</configuration>

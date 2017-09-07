@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.ComResumeDao">
+
+	<!-- 配置实体类与数据库表的映射关系 -->
+	<resultMap type="comresume" id="comresumeMap">
+		<id column="cr_id" property="cr_id"/>
+		<result column="sendem" property="sendEm"/>
+		<result column="ur_id" property="ur_id"/>
+		<result column="sendname" property="sendName"/>
+		<result column="time" property="time"/>
+		<result column="c_id" property="c_id"/>
+		<result column="toem" property="toEm"/>
+		<result column="r_id" property="r_id"/>
+	</resultMap>
+	<insert id="addComResume" parameterType="comresume">
+		insert into comresume values(null,#{sendEm},#{ur_id},#{sendName},#{time},#{c_id},#{toEm},#{r_id}); 
+	</insert>
+	<select id="selectResume" parameterType="comresume" resultType="comresume">
+		select * from comresume	 where ur_id=#{ur_id} and r_id=#{r_id}
+	</select>
+	
+	<!-- 统计信息的数量 -->
+	<!-- 使用<sql id="">,<include refid="">作用：方便一些sql内容，在多个地方重复使用；且使主sql语句比较简洁 -->
+	<select id="getTotalComResume" resultType="int">
+		select count(1) from comresume
+		<include refid="whereConstant" />
+	</select>
+
+	<!--查询满足条件的用户信息 -->
+	<select id="getComResumePager" resultMap="comresumeMap">
+		select * from comresume
+		<include refid="whereConstant" />
+		limit #{start},#{limit}
+	</select>
+
+	<!-- 查询条件 -->
+	<sql id="whereConstant">
+		<trim prefix="where" prefixOverrides="and||or">
+			<if test="cr_id != null">
+				and cr_id=#{cr_id}
+			</if>
+			<if test="toEm != null and toEm != ''">
+				and toem like concat("%", #{toEm}, "%")
+			</if>
+			
+		</trim>
+	</sql>
+
+
+
+	<!-- 删除信息 -->
+	<delete id="delComResume" parameterType="Integer">
+		delete from comresume where cr_id in
+		<foreach item="cr_id" collection="array" open="(" separator=","
+			close=")">
+			#{cr_id}
+		</foreach>
+	</delete>
+	
+	
+</mapper>

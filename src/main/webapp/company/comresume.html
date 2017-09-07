@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>搜索人才</title>
+<link href="../assets/css/bs3/dpl.css" rel="stylesheet" type="text/css" />
+<link href="../assets/css/bs3/bui.css" rel="stylesheet" type="text/css" />
+<link href="../assets/css/page-min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div class="container">
+		<!-- 搜索表单 -->
+		<div class="row">
+			<form id="searchForm" class="form-horizontal span24">
+				<div class="row">
+					<div class="control-group span8">
+						<label class="control-label">简历编号：</label>
+						<div class="controls">
+							<input type="text" class="control-text" name="cr_id"  data-messages="{regexp:'不是有效的数字'}" data-rules="{number:true}" >
+						</div>
+						<span id="warring" style="color:red;margin-left:100px;"></span>
+					</div>
+					<div class="control-group span8">
+						<label class="control-label">接收者邮箱：</label>
+						<div class="controls">
+							<input type="text" class="control-text" name="toEm">
+						</div>
+					</div>
+					
+					<div class="control-group span4" style="float:right;">
+						<button type="button" id="btnSearch" class="button button-primary">搜索</button>
+						<button type="reset" class="button" style="margin-left: 15px;">重置</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- 数据表格 -->
+		<div class="search-grid-container">
+			<div id="grid"></div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../assets/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../assets/js/bui-min.js"></script>
+	<script type="text/javascript" src="../assets/js/config-min.js"></script>
+	<script type="text/javascript">
+	
+		//将long转换为对象
+    	function gettime(time){
+			console.log(time);
+       	 	var date = new Date(time);
+        	return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+   		 }
+	
+		BUI.use([ 'common/search', 'common/page' ], function(Search) {
+
+			// 表格列
+			var columns = [ {
+				title : '简历编号',
+				dataIndex : 'cr_id',
+				width : 180,
+				renderer : function(v) {
+						return Search.createLink({
+							id : 'detail' + v,
+							title : '招聘详细信息',
+							text : v,
+							href : '../recruit/showRecruitById?rid=' + v
+						}); 
+					}
+			}, {
+				title : '发送者邮箱',
+				dataIndex : 'sendEm',
+				width : 180,
+				renderer : function(v) {
+					return Search.createLink({
+						id : 'detail' + v,
+						title : '用户详细信息',
+						text : v,
+						href : '../company/lookUserResume?email=' + v
+					});
+				}
+			}, {
+				title : '简历id',
+				dataIndex : 'ur_id',
+				width : 180,
+			}, {
+				title : '发送者昵称',
+				dataIndex : 'sendName',
+				width : 180,
+			}, {
+				title : '发送时间',
+				//不知道怎样调用方法，苦逼啊
+				dataIndex : 'time',
+				width : 180,
+			}, {
+				title : '公司id',
+				dataIndex : 'c_id',
+				width : 180,
+			}, {
+				title : '接收者邮箱',
+				dataIndex : 'toEm',
+				width : 180,
+			}
+			
+			];
+
+			// 数据源对象 
+			var store = Search.createStore('../selectcruit/getComResumePager', { // 分页查找
+				proxy : {
+					pageStart : 1, // 修改pageIndex-第几页
+					method : 'POST'
+				},
+				autoSync : true, // 保存数据后，自动更新
+				pageSize : 5
+			// 修改limit-单页多少条记录
+			});
+
+			// 弹出新建/编辑窗口
+			var editing = new BUI.Grid.Plugins.DialogEditing({
+				contentId : 'content', // 设置隐藏的Dialog内容
+				autoSave : true, // 添加数据或者修改数据时，自动保存
+				triggerCls : 'btn-edit'
+			});
+
+			// 配置列信息及工具栏
+			var gridCfg = Search.createGridCfg(columns, {
+				tbar : {
+					// 工具栏的项
+					items : [ {
+						text : '<i class="icon-accout"></i>删除',
+						btnCls : 'button button-small',
+						handler : delFunction
+					}, {
+						text : '<i class="icon-accout"></i>查看',
+						btnCls : 'button button-small',
+						handler : showFunction
+					} ]
+				},
+				plugins : [ editing, BUI.Grid.Plugins.CheckSelection, // 选择行插件
+				BUI.Grid.Plugins.AutoFit ]
+			// 自适应宽度
+			});
+
+			var search = new Search({
+				store : store,
+				gridCfg : gridCfg
+			});
+
+			// 获取表格控件
+			var grid = search.get('grid');
+
+			//显示详细页面操作
+			function showFunction() {
+				// 只能选择一行编辑
+				var selections = grid.getSelection();
+				if (selections.length == 1) {
+					//BUI.Message.Alert(selections[0]);
+					console.log(selections[0].email);
+					window.location.href = "../company/lookUserResume?email="+ selections[0].sendEm;
+				} else {
+					BUI.Message.Alert("请选择一个要查看的行！");
+				}
+			}
+
+			// 删除操作 -- 支持批量删除
+			function delFunction() {
+				// 获取选择项
+				var selections = grid.getSelection();
+				if (selections.length > 0) {
+					// 删除
+					delItems(selections);
+				} else {
+					BUI.Message.Alert("请选择要删除的数据！");
+				}
+			}
+			
+			
+			// 执行删除的方法
+			function delItems(items) {
+				var cr_ids = [];
+				BUI.each(items, function(item) {
+					// item即为每一行的一条用户信息
+					cr_ids.push(item.cr_id);
+				});
+				if (cr_ids.length) {
+					BUI.Message.Confirm('确认要删除选中的记录吗？', function() {
+						// 点击确认删除，发送删除的请求到后台，删除数据库数据
+						$.ajax({
+							url : '../selectcruit/delComResume',
+							data : {
+								cr_ids : cr_ids
+							},
+							dataType : 'json',
+							success : function(data) {
+								if (data.code == 0) { // 删除成功
+									BUI.Message.Alert("删除成功！");
+									search.load(true); // 重新加载页码
+								} else {
+									BUI.Message.Alert(data.message);
+								}
+							}
+						});
+					}, 'question');
+				}
+			}
+
+		});
+	</script>
+<body>
+</html>

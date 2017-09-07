@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.SubjectDao">
+<!-- 配置二级缓存，容量及能否被修改 -->
+	<cache readOnly="true" size="10000">
+	</cache>
+	<!-- 配置实体类与数据库表的映射关系 -->
+	<resultMap type="subject" id="subject">
+	       <id column="subjectID" property="subjectID"/>
+	       <id column="subjectTitle" property="subjectTitle"/>
+	       <id column="subjectOptionA" property="subjectOptionA"/>
+	       <id column="subjectOptionB" property="subjectOptionB"/>
+	       <id column="subjectOptionC" property="subjectOptionC"/>
+	       <id column="subjectOptionD" property="subjectOptionD"/>
+	       <id column="subjectAnswer" property="subjectAnswer"/>
+	       <id column="subjectParse" property="subjectParse"/>	
+	</resultMap>
+		
+	
+
+	<select id="getAllSubject" resultMap="subject">
+		select * from subject
+	</select>
+	
+	<!-- 根据编号获取试题详细信息 -->
+	<select id="showSubjectById" resultMap="subject">
+		select * from subject where subjectID=#{subjectID}
+	</select>
+	
+	<select id="randomFindSubjec" resultMap="subject">
+	select * from subject as sub order by rand()
+	
+	</select>
+	
+	<!-- 发布招聘信息 -->
+	<insert id="addSubject" parameterType="subject">
+		insert into
+		subject(subjectTitle, subjectOptionA,subjectOptionB, subjectOptionC,subjectOptionD,subjectAnswer,subjectParse)
+		values(#{subjectTitle},#{subjectOptionA},#{subjectOptionB},#{subjectOptionC},#{subjectOptionD},#{subjectAnswer},#{subjectParse})
+	</insert>
+
+	<!-- 编辑考试信息 -->
+	<update id="editSubject" parameterType="subject">
+	    update subject set subjectID=#{subjectID},
+	    subjectTitle=#{subjectTitle},subjectOptionA=#{subjectOptionA},
+	    subjectOptionB=#{subjectOptionB},subjectOptionC=#{subjectOptionC},
+	    subjectOptionD=#{subjectOptionD},subjectAnswer=#{subjectAnswer},
+	    subjectParse=#{subjectParse}
+	    where subjectID=#{subjectID}
+	</update>
+
+	
+	<!-- 删除考题 -->
+	<delete id="delSubject" parameterType="Integer">
+		delete from subject where subjectID in
+		<foreach item="subjectID" collection="array" open="(" separator=","
+			close=")">
+			#{subjectID}
+		</foreach>
+	</delete>
+	
+	<select id="getTotalSubject" resultType="int">
+		select count(1) from subject
+		<include refid="whereConstant" />
+	</select>
+	<!--查询满足条件的考试信息 -->
+	<select id="getSubjectPager" resultMap="subject">
+		select * from subject
+		<include refid="whereConstant" />
+		limit #{start},#{limit}
+	</select>
+
+	<!-- 查询条件 -->
+	<sql id="whereConstant">
+		<trim prefix="where" prefixOverrides="and||or">
+			<if test="subjectID != null">
+				and subjectID=#{subjectID}
+			</if>
+		</trim>
+	</sql>
+
+
+
+	
+</mapper>

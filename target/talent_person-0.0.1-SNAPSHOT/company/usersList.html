@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+		<meta charset="UTF-8">
+	<title>用户列表</title>
+	<link href="../assets/css/bs3/dpl.css" rel="stylesheet" type="text/css" />
+	<link href="../assets/css/bs3/bui.css" rel="stylesheet" type="text/css" />
+	<link href="../assets/css/page-min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div class="container">
+		<!-- 搜索表单 -->
+		<div class="row">
+			<form id="searchForm" class="form-horizontal span24">
+				
+				<div class="row">
+				<div class="control-group span8">
+						<label class="control-label">公司名称：</label>
+						<div class="controls">
+							<input type="text" class="control-text" name="uname">
+						</div>
+					</div>
+					<div class="control-group span8">
+						<label class="control-label">公司性质：</label>
+						<div class="controls">
+							<select name="sex">
+								<option value="-1">请选择</option>
+								<option value="1">上市</option>
+								<option value="0">未上市</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group span10">
+						<label class="control-label">招聘时间：</label>
+						<div class="bui-form-group controls" data-rules="{dateRange:true}">
+							<input type="text" class="calendar" name="birthday" style="width:140px;">
+						</div>
+					</div>
+					<div class="control-group span4" style="float:right;">
+						<button type="button" id="btnSearch" class="button button-primary">搜索</button>
+						<button type="reset" class="button" style="margin-left: 15px;">重置</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- 数据表格 -->
+		<div class="search-grid-container">
+			<div id="grid"></div>
+		</div>
+	</div>
+	<!-- 隐藏的Dialog内容 -->
+	<div id="content" class="hide">
+		<form id="J_Form" class="form-horizontal">
+			<input type="hidden" name="uid">
+			<div class="row">
+				<div class="control-group span8">
+					<label class="control-label"><s>*</s>公&nbsp;&nbsp;司&nbsp;&nbsp;名：</label>
+					<div class="controls">
+						<input name="uname" type="text" data-rules="{required:true}" class="input-normal control-text"/>
+					</div>
+				</div>
+				<div class="control-group span8">
+					<label class="control-label"><s>*</s>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</label>
+					<div class="controls">
+						<input name="pname" type="text" data-rules="{required:true}" class="input-normal control-text"/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="control-group span8">
+					<label class="control-label"><s>*</s>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</label>
+					<div class="controls">
+						<select name="sex" data-rules="{required:true}"  class="input-normal">
+							<option value="">请选择</option>
+							<option value="1">男</option>
+							<option value="0">女</option>
+						</select>
+					</div>
+				</div>
+				<div class="control-group span8">
+					<label class="control-label"><s>*</s>联系电话：</label>
+					<div class="controls">
+						<input name="phone" type="text" data-rules="{required:true}" class="input-normal control-text"/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="control-group span8">
+					<label class="control-label"><s>*</s>年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：</label>
+					<div class="controls">
+						<input name="age" type="text" data-rules="{required:true}" class="input-normal control-text"/>
+					</div>
+				</div>
+				<div class="control-group span8">
+					<label class="control-label"><s>*</s>出生日期：</label>
+					<div class="controls">
+						<input name="birthday" type="text" data-rules="{required:true}" class="calendar" style="width:140px;"/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="control-group span8">
+					<label class="control-label">账户余额：</label>
+					<div class="controls">
+						<input name="account" type="text" class="input-normal control-text"/>
+					</div>
+				</div>
+				<div class="control-group span8">
+					<label class="control-label">联系地址：</label>
+					<div class="controls control-row4">
+						<input name="address" type="text" class="input-normal control-text"/>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="../assets/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../assets/js/bui-min.js"></script>
+	<script type="text/javascript" src="../assets/js/config-min.js"></script>
+	<script type="text/javascript">
+		BUI.use(['common/search','common/page'],
+			function(Search) {
+				// 性别映射对象
+				var enumObj = {
+					"1" : "男",
+					"0" : "女"
+				};
+				// 表格列
+				var cs = [{
+							title : '编号',
+							dataIndex : 'uid',
+							width : 80,
+							renderer : function(v) {
+								return Search.createLink({
+									id : 'detail' + v,
+									title : '用户详细信息',
+									text : v,
+									href : '../user/getUserById.action?uid=' + v
+								});
+							}
+						}, {
+							title : '用户名',
+							dataIndex : 'uname',
+							width : 100
+						}, {
+							title : '姓名',
+							dataIndex : 'pname',
+							width : 100
+						}, {
+							title : '性别',
+							dataIndex : 'sex',
+							width : 60,
+							renderer : BUI.Grid.Format.enumRenderer(enumObj)
+						}, {
+							title : '出生日期',
+							dataIndex : 'birthday',
+							width : 120,
+							renderer : function(value, obj) {
+								return value.substr(0, 10);
+							}
+						}, {
+							title : '联系电话',
+							dataIndex : 'phone',
+							width : 120
+						}, {
+							title : '联系地址',
+							dataIndex : 'address',
+							width : 350
+						}, {
+							title : '操作',
+							width : 120,
+							renderer : function(value, obj) {
+								editStr = '<span class="grid-command btn-edit" title="编辑用户信息">编辑</span>', 
+								delStr = '<span class="grid-command btn-del" title="删除用户信息">删除</span>';
+								return editStr + delStr;
+							}
+						}];
+				
+				// 数据源对象 
+				var store = Search.createStore('../user/getAllUsers.action');
+				// 弹出新建/编辑窗口
+				var editing = new BUI.Grid.Plugins.DialogEditing({
+					contentId : 'content', // 设置隐藏的Dialog内容
+					autoSave : true, // 添加数据或者修改数据时，自动保存
+					triggerCls : 'btn-edit'
+				});
+				
+				// 配置列信息及工具栏
+				var gridCfg = Search.createGridCfg(columns, {
+									tbar : {
+										// 工具栏的项
+										items : [{
+													// xclass : 'bar-item-button' // 按钮(bar-item-button)-默认、 文本(bar-item-text)、分隔符(bar-item-separator)或自定义项
+													text : '<i class="icon-plus"></i>新建',
+													btnCls : 'button button-small'
+												}, {
+													text : '<i class="icon-edit"></i>编辑',
+													btnCls : 'button button-small'
+												}, {
+													text : '<i class="icon-remove"></i>删除',
+													btnCls : 'button button-small'
+												} ]
+									}, plugins : [
+											editing,
+											BUI.Grid.Plugins.CheckSelection, // 选择行插件
+											BUI.Grid.Plugins.AutoFit ] // 自适应宽度
+								});
+
+				var search = new Search({
+					/* formId : 'searchForm', */ // 表单的id，默认为：searchForm
+					/* btnId : 'btnSearch', */ // 提交按钮的id，默认为：btnSearch
+					/* gridId : 'grid', */ // 表格容器的id，默认为：grid
+					/* autoSearch : true, */ // 页面显示后，是否自动进行查询，默认为：true
+					store : store,
+					gridCfg : gridCfg
+					/* formCfg : 表单的配置项 */
+				});
+			});
+	</script>
+<body>
+</html>

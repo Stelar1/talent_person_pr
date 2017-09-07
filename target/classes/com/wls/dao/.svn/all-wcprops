@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/ourpro/!svn/ver/20/talent_person_pr/src/main/java/com/wls/dao
+END
+UserDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ourpro/!svn/ver/19/talent_person_pr/src/main/java/com/wls/dao/UserDao.java
+END
+CompanyDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ourpro/!svn/ver/20/talent_person_pr/src/main/java/com/wls/dao/CompanyDao.java
+END
+RecruitDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ourpro/!svn/ver/20/talent_person_pr/src/main/java/com/wls/dao/RecruitDao.java
+END

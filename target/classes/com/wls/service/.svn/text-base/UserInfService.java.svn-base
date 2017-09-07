@@ -1,0 +1,9 @@
+package com.wls.service;
+
+import com.wls.entity.UserInf;
+
+public interface UserInfService {
+	public int add(UserInf userInf);
+	public UserInf selectById(String email);
+	public int updateInf(String email);
+}

@@ -1,0 +1,90 @@
+package com.wls.utils;
+
+import java.lang.reflect.Field;
+import java.sql.Date;
+import java.util.Map;
+import java.util.Map.Entry;
+
+public class PraseObject {
+/*
+	public static Object getEntity(Map<String, String[]> ps,Class<?> c){
+		Object object = null;
+		try {
+			object = c.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		Field[] fields = c.getDeclaredFields();
+		String name = null;
+		String cname = c.getSimpleName();
+		try {
+			for(Entry<String,String[]> en : ps.entrySet()){
+				if(en.getKey().lastIndexOf(".")!=-1){
+					name = en.getKey().split(".")[0];
+					if(cname.equals(name)){
+						for(Field field : fields){
+							if(field.getName().equals(en.getKey().split(".")[1])){
+								field.setAccessible(true);
+								field.set(object,prase(field.getType().getName(),en.getKey()));
+							}
+						}
+					}
+				}
+			}
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return object;
+	}
+
+	private static Object prase(String type,String value){
+		//化简得到类简名
+		if(type.lastIndexOf(".")!=-1){
+			type = type.substring(type.lastIndexOf(".")+1);
+		}
+		switch(type){
+		case "String" : { return value; }
+		case "int" : 
+		case "Integer" : {return stringToInt(value);}
+		case "long" : 
+		case "Long" : { return stringToLong(value);}
+		case "Date" : { return stringToDate(value);}
+		case "float" : 
+		case "Float" : {return stringToFloat(value);}
+		case "double" : 
+		case "Double" : { return stringToDouble(value);}
+		case "boolean" : 
+		case "Boolean" : {return stringToBoolean(value);}
+		default : {
+			try {
+				throw new Exception(value+"转换为"+type+"时出错！");
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+				}
+			}
+		}
+	}
+	public static int stringToInt(String s){
+		return Integer.parseInt(s);
+	}
+	public static float stringToFloat(String s){
+		return Float.parseFloat(s);
+	}
+	public static double stringToDouble(String s){
+		return Double.parseDouble(s);
+	}
+	public static long stringToLong(String s){
+		return Long.parseLong(s);
+	}
+	public static Date stringToDate(String s){
+		return Date.valueOf(s);
+	}
+	public static boolean stringToBoolean(String s){
+		return Boolean.valueOf(s);
+	}*/
+}

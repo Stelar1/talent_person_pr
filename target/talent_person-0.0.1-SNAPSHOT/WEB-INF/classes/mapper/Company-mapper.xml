@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.CompanyDao">
+
+	<!-- 配置二级缓存，容量及能否被修改 -->
+	<!-- <cache readOnly="true" size="10000">
+	</cache> -->
+	<!-- 配置实体类与数据库表的映射关系 -->
+	<resultMap type="company" id="company">
+		<id column="c_id" property="c_id" />
+		<result column="email" property="email"/>
+		<result column="c_name" property="c_name" />
+		<result column="c_place" property="c_place" />
+		<result column="c_type" property="c_type" />
+		<result column="c_level" property="c_level" />
+		<result column="c_imag" property="c_imag" />
+		<result column="c_comment" property="c_comment" />
+		<result column="c_desc" property="c_desc" />
+	</resultMap>
+
+	<!-- 根据Email查询 -->
+	<select id="selectById" parameterType="String" resultType="company">
+		select * from company where email=#{email};
+	</select>
+
+	<!--添加 -->
+	<insert id="addCompany" parameterType="company">
+		insert into
+		company(email,c_name,c_place,c_type,c_level,c_imag,c_desc)
+		values
+		(#{email},#{c_name},#{c_place},#{c_type},#{c_level},#{c_imag},#{c_desc});
+	</insert>
+	<!-- 更新 -->
+	<update id="updateCompany" parameterType="company">
+		update company set
+		c_name=#{c_name},
+		c_place =#{c_place},c_type = #{c_type},
+		c_level =#{c_level},c_desc=#{c_desc}
+		where c_id=#{c_id};
+	</update>
+
+
+
+</mapper>

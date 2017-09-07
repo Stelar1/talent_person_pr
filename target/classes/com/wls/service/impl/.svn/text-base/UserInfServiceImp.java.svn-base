@@ -1,0 +1,29 @@
+package com.wls.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.wls.dao.UserInfDao;
+import com.wls.entity.UserInf;
+import com.wls.service.UserInfService;
+@Service
+public class UserInfServiceImp implements UserInfService {
+
+	@Resource
+	UserInfDao dao;
+	
+	@Override
+	public int add(UserInf userInf) {
+		return dao.add(userInf);
+	}
+	@Override
+	public UserInf selectById(String email) {
+		return dao.selectById(email);
+	}
+	@Override
+	public int updateInf(String email) {
+		return dao.updateInf(email);
+	}
+
+}

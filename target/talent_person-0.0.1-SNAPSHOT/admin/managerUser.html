@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>搜索人才</title>
+<link href="../assets/css/bs3/dpl.css" rel="stylesheet" type="text/css" />
+<link href="../assets/css/bs3/bui.css" rel="stylesheet" type="text/css" />
+<link href="../assets/css/page-min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div class="container">
+		<!-- 搜索表单 -->
+		<div class="row">
+			<form id="searchForm" class="form-horizontal span24">
+				<div class="row">
+					<div class="control-group span8">
+						<label class="control-label">用户邮箱：</label>
+						<div class="controls">
+							<input type="text" class="control-text" name="email" >
+						</div>
+						<span id="warring" style="color:red;margin-left:100px;"></span>
+					</div>
+					<div class="control-group span8">
+						<label class="control-label">用户类型：</label>
+						<div class="controls">
+							<select name="access">
+								<option value="">所有</option>
+								<option value="1">企业</option>
+								<option value="2">普通用户</option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="control-group span4" style="float:right;">
+						<button type="button" id="btnSearch" class="button button-primary">搜索</button>
+						<button type="reset" class="button" style="margin-left: 15px;">重置</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- 数据表格 -->
+		<div class="search-grid-container">
+			<div id="grid"></div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../assets/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../assets/js/bui-min.js"></script>
+	<script type="text/javascript" src="../assets/js/config-min.js"></script>
+	<script type="text/javascript">
+		BUI.use([ 'common/search', 'common/page' ], function(Search) {
+
+			var enumObj = {
+
+				"1" : "企业用户",
+				"2" : "普通用户"
+			};
+			// 表格列
+			var columns = [ {
+				title : '账号',
+				dataIndex : 'email',
+				width : 180,
+				renderer : function(v) {
+					return Search.createLink({
+						id : 'detail' + v,
+						title : '用户详细信息',
+						text : v,
+						href : '../user/getUserById.action?email=' + v
+					});
+				}
+			}, {
+				title : '密码',
+				dataIndex : 'password',
+				width : 180
+			}, {
+				title : '权限',
+				dataIndex : 'access',
+				width : 180,
+				renderer : BUI.Grid.Format.enumRenderer(enumObj)
+			} ];
+
+			// 数据源对象 
+			var store = Search.createStore('../user/getUserPager', { // 分页查找
+				proxy : {
+					pageStart : 1, // 修改pageIndex-第几页
+					method : 'POST'
+				},
+				autoSync : true, // 保存数据后，自动更新
+				pageSize : 5
+			// 修改limit-单页多少条记录
+			});
+
+			// 弹出新建/编辑窗口
+			var editing = new BUI.Grid.Plugins.DialogEditing({
+				contentId : 'content', // 设置隐藏的Dialog内容
+				autoSave : true, // 添加数据或者修改数据时，自动保存
+				triggerCls : 'btn-edit'
+			});
+
+			// 配置列信息及工具栏
+			var gridCfg = Search.createGridCfg(columns, {
+				tbar : {
+					// 工具栏的项
+					items : [ {
+						text : '<i class="icon-accout"></i>删除',
+						btnCls : 'button button-small',
+						handler : delFunction
+					} ]
+				},
+				plugins : [ editing, BUI.Grid.Plugins.CheckSelection, // 选择行插件
+				BUI.Grid.Plugins.AutoFit ]
+			// 自适应宽度
+			});
+
+			var search = new Search({
+				store : store,
+				gridCfg : gridCfg
+			});
+
+			// 获取表格控件
+			var grid = search.get('grid');
+
+			//显示详细页面操作
+			function showFunction() {
+				// 只能选择一行编辑
+				var selections = grid.getSelection();
+				if (selections.length == 1) {
+					//BUI.Message.Alert(selections[0]);
+					//console.log(selections[0].rid);
+					window.location.href = "../manager/showUserinfo?email="
+							+ selections[0].email;
+				} else {
+					BUI.Message.Alert("请选择一个要查看的行！");
+				}
+			}
+
+			// 删除操作 -- 支持批量删除
+			function delFunction() {
+				// 获取选择项
+				var selections = grid.getSelection();
+				if (selections.length > 0) {
+					// 删除
+					delItems(selections);
+				} else {
+					BUI.Message.Alert("请选择要删除的数据！");
+				}
+			}
+
+			// 执行删除的方法
+			function delItems(items) {
+				var emails = [];
+				BUI.each(items, function(item) {
+					// item即为每一行的一条用户信息
+					emails.push(item.email);
+				});
+				if (emails.length) {
+					BUI.Message.Confirm('确认要删除选中的记录吗？', function() {
+						// 点击确认删除，发送删除的请求到后台，删除数据库数据
+						$.ajax({
+							url : '../user/delUser',
+							data : {
+								emails : emails
+							},
+							dataType : 'json',
+							success : function(data) {
+								if (data.code == 0) { // 删除成功
+									BUI.Message.Alert("删除成功！");
+									search.load(true); // 重新加载页码
+								} else {
+									BUI.Message.Alert(data.message);
+								}
+							}
+						});
+					}, 'question');
+				}
+			}
+
+		});
+	</script>
+<body>
+</html>

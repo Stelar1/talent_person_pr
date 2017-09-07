@@ -1,0 +1,10 @@
+package com.wls.dao;
+
+import com.wls.entity.User;
+
+public interface UserDao {
+	public int addUser(User user);
+	public User selectByEmail(String email);
+	public String selectSafe(String email);
+	public int updateSafe(User user);
+}

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.ResumeDao">
+
+	<!-- 配置二级缓存，容量及能否被修改 -->
+	<cache readOnly="true" size="10000">
+	</cache>
+
+	<!-- 配置实体类与数据库表的映射关系 -->
+	<resultMap type="resume" id="resumeMap">
+		<id column="ur_id" property="ur_id"/>
+		<result column="email" property="email"/>
+		<result column="ur_type" property="ur_type"/>
+		<result column="ur_url" property="ur_url"/>
+		<result column="ur_comment" property="ur_comment"/>
+		<result column="ur_content" property="ur_content"/>
+	</resultMap>
+	<insert id="addResume" parameterType="resume">
+		insert into resume(email,ur_content) values(#{email},#{ur_content}); 
+	</insert>
+	<select id="findResume" parameterType="String" resultType="resume">
+		select * from resume where email=#{email}
+	</select>
+	<select id="findJsonResume" parameterType="String" resultType="String">
+		select ur_content from resume where email=#{email}
+	</select>
+	<update id="updateResume" parameterType="resume">
+		update resume set ur_content=#{ur_content} where email=#{email}
+	</update>
+</mapper>

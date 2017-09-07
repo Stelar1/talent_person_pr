@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>搜索人才</title>
+<link href="../assets/css/bs3/dpl.css" rel="stylesheet" type="text/css" />
+<link href="../assets/css/bs3/bui.css" rel="stylesheet" type="text/css" />
+<link href="../assets/css/page-min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div class="container">
+		<!-- 搜索表单 -->
+		<div class="row">
+			<form id="searchForm" class="form-horizontal span24">
+				<div class="row">
+					<div class="control-group span8">
+						<label class="control-label">用户名：</label>
+						<div class="controls">
+							<input type="text" class="control-text" name="uname">
+						</div>
+					</div>
+					<div class="control-group span8">
+						<label class="control-label">受教育程度：</label>
+						<div class="controls">
+							<select name="uedu" class="input-normal">
+								<option value="">请选择</option>
+								<option value="无要求">无要求</option>
+								<option value="专科及以上学历">专科</option>
+								<option value="本科及以上学历">本科</option>
+								<option value="研究生及以上学历">研究生及以上学历</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group span8">
+						<label class="control-label">期望职位：</label>
+						<div class="controls">
+							<input type="text" class="control-text" name="ujob">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="control-group span8">
+						<label class="control-label">期望工作地点：</label>
+						<div class="controls">
+							<select name="uworkPlace">
+								<option value="">请选择</option>
+								<option value="江苏省">江苏</option>
+								<option value="北京">北京</option>
+								<option value="天津">天津</option>
+								<option value="上海">上海</option>
+								<option value="重庆">重庆</option>
+								<option value="广东省">广东</option>
+								<option value="浙江省">浙江</option>
+								<option value="福建省">福建</option>
+								<option value="湖南省">湖南</option>
+								<option value="湖北省">湖北</option>
+								<option value="山东省">山东</option>
+								<option value="辽宁省">辽宁</option>
+								<option value="吉林省">吉林</option>
+								<option value="云南省">云南</option>
+								<option value="四川省">四川</option>
+								<option value="安徽省">安徽</option>
+								<option value="江西省">江西</option>
+								<option value="黑龙江省">黑龙江</option>
+								<option value="河北省">河北</option>
+								<option value="陕西省">陕西</option>
+								<option value="海南省">海南</option>
+								<option value="河南省">河南</option>
+								<option value="山西省">山西</option>
+								<option value="内蒙古">内蒙古</option>
+								<option value="广西">广西</option>
+								<option value="贵州省">贵州</option>
+								<option value="宁夏">宁夏</option>
+								<option value="青海省">青海</option>
+								<option value="新疆">新疆</option>
+								<option value="西藏">西藏</option>
+								<option value="甘肃省">甘肃</option>
+								<option value="台湾省">台湾</option>
+								<option value="香港">香港</option>
+								<option value="澳门">澳门</option>
+								<option value="国外">国外</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group span10">
+						<label class="control-label">出生日期：</label>
+						<div class="bui-form-group controls">
+							<input type="text" class="calendar" name="ubirth"
+								style="width:140px;">
+						</div>
+					</div>
+					<div class="control-group span4" style="float:right;">
+						<button type="button" id="btnSearch" class="button button-primary">搜索</button>
+						<button type="reset" class="button" style="margin-left: 15px;">重置</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- 数据表格 -->
+		<div class="search-grid-container">
+			<div id="grid"></div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../assets/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../assets/js/bui-min.js"></script>
+	<script type="text/javascript" src="../assets/js/config-min.js"></script>
+	<script type="text/javascript">
+		BUI.use([ 'common/search', 'common/page' ], function(Search) {
+
+			// 表格列
+			var columns = [ {
+				title : '账号',
+				dataIndex : 'email',
+				width : 150,
+				renderer : function(v) {
+					return Search.createLink({
+						id : 'detail' + v,
+						title : '用户详细信息',
+						text : v,
+						href : '../userinf/showUserinfo?email=' + v
+					});
+				}
+			}, {
+				title : '用户名',
+				dataIndex : 'uname',
+				width : 130
+			}, {
+				title : '期望工作地点',
+				dataIndex : 'uworkPlace',
+				width : 180
+			}, {
+				title : '期望工作',
+				dataIndex : 'ujob',
+				width : 180
+			}, {
+				title : '性别',
+				dataIndex : 'usex',
+				width : 100,
+			}, {
+				title : '出生日期',
+				dataIndex : 'ubirth',
+				width : 180,
+				renderer : function(value, obj) {
+					return value.substr(0, 10);
+				}
+			}, {
+				title : '联系电话',
+				dataIndex : 'uphone',
+				width : 100
+			}, {
+				title : '受教育程度',
+				dataIndex : 'uedu',
+				width : 100
+			} ];
+
+			// 数据源对象 
+			var store = Search.createStore('../userinf/getUserInfPager', { // 分页查找
+				proxy : {
+					pageStart : 1, // 修改pageIndex-第几页
+					method : 'POST'
+				},
+				autoSync : true, // 保存数据后，自动更新
+				pageSize : 5
+			// 修改limit-单页多少条记录
+			});
+
+			// 弹出新建/编辑窗口
+			var editing = new BUI.Grid.Plugins.DialogEditing({
+				contentId : 'content', // 设置隐藏的Dialog内容
+				autoSave : true, // 添加数据或者修改数据时，自动保存
+				triggerCls : 'btn-edit'
+			});
+
+			// 配置列信息及工具栏
+			var gridCfg = Search.createGridCfg(columns, {
+									tbar : {
+										// 工具栏的项
+										items : [
+												{
+													text : '<i class="icon-accout"></i>查看招聘信息',
+													btnCls : 'button button-small',
+													handler : showFunction
+												}]
+									}, plugins : [
+											editing,
+											BUI.Grid.Plugins.CheckSelection, // 选择行插件
+											BUI.Grid.Plugins.AutoFit ] // 自适应宽度
+								});
+
+			var search = new Search({
+				store : store,
+				gridCfg : gridCfg
+			});
+			
+
+			// 获取表格控件
+			var grid = search.get('grid');
+			
+
+			//显示详细页面操作
+			function showFunction() {
+				// 只能选择一行编辑
+				var selections = grid.getSelection();
+				if (selections.length == 1) {
+					//BUI.Message.Alert(selections[0]);
+					//console.log(selections[0].rid);
+					window.location.href = "../userinf/showUserinfo?email="
+							+ selections[0].email;
+				} else {
+					BUI.Message.Alert("请选择一个要查看的行！");
+				}
+			}
+
+		});
+	</script>
+<body>
+</html>

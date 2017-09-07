@@ -1,0 +1,65 @@
+ /*以下是个人中心的公共样式*/
+        * main{
+            margin:0px;
+            padding:0px;
+        }
+
+        body{
+            background-color:#eeeeee;
+        }
+
+        #main{
+            height:200px;
+            margin-top:30px;
+        }
+
+        .panel{
+            background-color:white;
+        }
+
+        .panel-header{
+            background:#00AA88;
+            color:white;
+        }
+
+        .panel-header p{
+            font-size:20px;
+            font-weight:bold;
+        }
+
+        .menu-second{
+            border-radius:2%;
+            background-color:#c2c2c2;
+        }
+
+        .bui-side-menu .bui-menu-title-text{
+            font-size:18px;
+            height:18px;
+            line-height:18px;
+        }
+
+        .menu-leaf{
+            background-color:#efefef;
+            border-radius:5%;
+        }
+
+        .menu-leaf:hover{
+            background-color:#00AA88;
+        }
+		.bui-side-menu .bui-menu-title, .bui-side-menu .bui-menu-title s, .bui-side-menu .menu-leaf a, .bui-side-menu .menu-leaf em {
+    		background: url("");
+			}
+		.bui-side-menu .bui-menu-title s{
+			width: 0px;
+			height: 0px;
+		}
+        .menu-leaf a em{
+            font-size:14px;
+            height:14px;
+            line-height:14px;
+        }
+        .row{
+            margin-top:15px;
+            margin-bottom:15px;
+        }
+        /*公共样式结束*/

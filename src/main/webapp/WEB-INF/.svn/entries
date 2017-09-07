@@ -1,0 +1,81 @@
+10
+
+dir
+20
+https://192.168.3.27/svn/ourpro/talent_person_pr/src/main/webapp/WEB-INF
+https://192.168.3.27/svn/ourpro
+
+
+
+2016-07-14T06:04:54.294505Z
+19
+long
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+475556a2-2655-a84d-922e-54ea89dc326b
+
+
+
+
+
+
+0
+
+admin
+dir
+
+classes
+dir
+
+common
+dir
+
+company
+dir
+
+web.xml
+file
+
+
+
+
+2016-07-11T01:12:51.016000Z
+2e49304e71e50c4d1597673aaff387cc
+2016-07-11T01:37:35.458382Z
+16
+long
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2250
+

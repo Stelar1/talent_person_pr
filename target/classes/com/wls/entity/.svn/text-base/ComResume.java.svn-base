@@ -1,0 +1,84 @@
+package com.wls.entity;
+
+/** 
+ * 公司收到的简历实体类
+ * 
+ * @author long
+ */
+public class ComResume {
+	//公司到的简历id
+	private int cr_id;
+	private String sendEm;
+	private int ur_id;
+	private String sendName;
+	private long time;
+	private int c_id;
+	private String toEm;
+	private int r_id;
+	public final int getCr_id() {
+		return cr_id;
+	}
+	public final void setCr_id(int cr_id) {
+		this.cr_id = cr_id;
+	}
+	public final String getSendEm() {
+		return sendEm;
+	}
+	public final void setSendEm(String sendEm) {
+		this.sendEm = sendEm;
+	}
+	public final int getUr_id() {
+		return ur_id;
+	}
+	public final void setUr_id(int ur_id) {
+		this.ur_id = ur_id;
+	}
+	public final String getSendName() {
+		return sendName;
+	}
+	public final void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
+	public final long getTime() {
+		return time;
+	}
+	public final void setTime(long time) {
+		this.time = time;
+	}
+	public final int getC_id() {
+		return c_id;
+	}
+	public final void setC_id(int c_id) {
+		this.c_id = c_id;
+	}
+	public final String getToEm() {
+		return toEm;
+	}
+	public final void setToEm(String toEm) {
+		this.toEm = toEm;
+	}
+	public final int getR_id() {
+		return r_id;
+	}
+	public final void setR_id(int r_id) {
+		this.r_id = r_id;
+	}
+	public ComResume(String sendEm, int ur_id, String sendName, long time, int c_id, String toEm, int r_id) {
+		super();
+		this.sendEm = sendEm;
+		this.ur_id = ur_id;
+		this.sendName = sendName;
+		this.time = time;
+		this.c_id = c_id;
+		this.toEm = toEm;
+		this.r_id = r_id;
+	}
+	public ComResume() {
+		super();
+	}
+	@Override
+	public String toString() {
+		return "ComResume [cr_id=" + cr_id + ", sendEm=" + sendEm + ", ur_id=" + ur_id + ", sendName=" + sendName + ", time=" + time + ", c_id=" + c_id + ", toEm=" + toEm + ", r_id=" + r_id + "]";
+	}
+	
+}

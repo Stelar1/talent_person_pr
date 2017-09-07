@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.UserInfDao">
+
+	<!-- 配置实体类与数据库表的映射关系 -->
+	<resultMap type="userinf" id="inf">
+		<id column="email" property="email"/>
+		<result column="u_workPlace" property="uworkPlace"/>
+		<result column="u_job" property="ujob"/>
+		<result column="u_name" property="uname"/>
+		<result column="u_sex" property="usex"/>
+		<result column="u_birth" property="ubirth"/>
+		<result column="u_homePlace" property="uhomePlace"/>
+		<result column="u_edu" property="uedu"/>
+		<result column="u_imag" property="uimag"/>
+		<result column="u_phone" property="uphone"/>
+	</resultMap>
+	<insert id="add" parameterType="userinf">
+		insert into userinf values
+		(#{email},#{uworkPlace},#{ujob},#{uname},#{usex},#{ubirth},#{uhomePlace},#{uedu},#{uimag},#{uphone}); 
+	</insert>
+	<update id="updateinf" parameterType="userinf">
+		update userinf set u_workPlace=#{uworkPlace} and u_job=#{ujob} and u_name=#{uname} and u_sex=#{usex}
+		and u_birth=#{ubirth} and u_homePlace=#{uhomePlace} and u_edu=#{uedu} and u_imag=#{uimag} and u_phone=#{uphone}
+		where email=#{email};
+	</update>
+	<select id="selectById" parameterType="String" resultMap="inf">
+		select * from userinf where email=#{email}
+	</select>
+</mapper>

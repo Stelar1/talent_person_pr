@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.RecruitDao">
+
+	<!-- 配置二级缓存，容量及能否被修改 -->
+	<cache readOnly="true" size="10000">
+	</cache>
+	<!-- 配置实体类与数据库表的映射关系 -->
+	<resultMap type="recruit" id="re">
+		<id column="r_id" property="rid" />
+		<result column="email" property="email" />
+		<result column="c_id" property="cid" />
+		<result column="r_title" property="rtitle" />
+		<result column="r_exper" property="rexper" />
+		<result column="r_edu" property="redu" />
+		<result column="r_job" property="rjob" />
+		<result column="r_salary" property="rsalary" />
+		<result column="r_type" property="rtype" />
+		<result column="r_place" property="rplace" />
+		<result column="r_num" property="rnum" />
+		<result column="r_desc" property="rdesc" />
+		<result column="r_comment" property="rcomment" />
+		<association property="company" javaType="company">
+			<id column="c_id" property="c_id" />
+			<result column="c_name" property="c_name" />
+			<result column="c_type" property="c_type" />
+			<result column="c_level" property="c_level" />
+		</association>
+	</resultMap>
+
+	<select id="getAllRecruit" resultMap="re">
+		select * from recruit
+	</select>
+	
+	<!-- 根据编号获取用户详细信息 -->
+	<select id="showRecruitById" resultMap="re">
+		select * from recruit where r_id=#{rid}
+	</select>
+	<!-- 用户查询简历  -->
+	
+	<select id="getPageSize" resultType="int">
+		select count(1) from recruit
+		<include refid="userSelect" />
+	</select>
+
+	<!--查询满足条件的用户信息 -->
+	<select id="userSelect" resultMap="re">
+		select * from recruit r,company c 
+		<include refid="userSelectMap" />
+		limit #{start},#{limit}
+	</select>
+
+	<!-- 查询数量 -->
+	<sql id="userSelect">
+		<trim prefix="where" prefixOverrides="and||or">
+			<if test="rexper != null and rexper != ''">
+				and r_exper=#{rexper}
+			</if>
+			<if test="rplace != null and rplace != ''">
+				and r_place like concat("%", #{rplace}, "%")
+			</if>
+			<if test="rtype != 4 and rtype != ''">
+				and r_type like concat(#{rtype})
+			</if>
+			<if test="redu != null and redu != ''">
+				and r_edu like concat(#{redu})
+			</if>
+			<if test="rjob != null and rjob != ''">
+				and r_job like concat("%", #{rjob}, "%")
+			</if>
+		</trim>
+	</sql>
+	<!-- 查询结果 -->
+	<sql id="userSelectMap">
+		<trim prefix="where" prefixOverrides="and||or">
+			c.c_id=r.c_id
+			<if test="rexper != null and rexper != ''">
+				and r_exper=#{rexper}
+			</if>
+			<if test="rplace != null and rplace != ''">
+				and r_place like concat("%", #{rplace}, "%")
+			</if>
+			<if test="rtype != 4 and rtype != ''">
+				and r_type like concat(#{rtype})
+			</if>
+			<if test="redu != null and redu != ''">
+				and r_edu like concat(#{redu})
+			</if>
+			<if test="rjob != null and rjob != ''">
+				and r_job like concat("%", #{rjob}, "%")
+			</if>
+		</trim>
+	</sql>
+	
+	
+	<!-- 用户查询简历结束 -->
+	
+
+	<!-- 统计信息的数量 -->
+	<!-- 使用<sql id="">,<include refid="">作用：方便一些sql内容，在多个地方重复使用；且使主sql语句比较简洁 -->
+	<select id="getTotalRecruit" resultType="int">
+		select count(1) from recruit
+		<include refid="whereConstant" />
+	</select>
+
+	<!--查询满足条件的用户信息 -->
+	<select id="getRecruitPager" resultMap="re">
+		select * from recruit
+		<include refid="whereConstant" />
+		limit #{start},#{limit}
+	</select>
+
+	<!-- 查询条件 -->
+	<sql id="whereConstant">
+		<trim prefix="where" prefixOverrides="and||or">
+			<if test="rid != null">
+				and r_id=#{rid}
+			</if>
+			<if test="rtitle != null and rtitle != ''">
+				and r_title like concat("%", #{rtitle}, "%")
+			</if>
+			<if test="rjob != null and rjob != ''">
+				and r_job like concat("%", #{rjob}, "%")
+			</if>
+		</trim>
+	</sql>
+
+
+	<!-- 发布招聘信息 -->
+	<insert id="addRecruit" parameterType="recruit">
+		insert into
+		recruit(email,c_id,r_title,r_exper,r_edu,r_job,r_salary,r_type,r_num,r_place,r_desc)
+		values(#{email},#{cid},#{rtitle},#{rexper},#{redu},#{rjob},#{rsalary},#{rtype},#{rnum},#{rplace},#{rdesc})
+	</insert>
+
+	<!-- 编辑招聘信息 -->
+	<update id="editRecruit" parameterType="recruit">
+
+		update recruit set email=#{email},
+		r_title=#{rtitle},r_exper=#{rexper},r_edu=#{redu},r_job=#{rjob},r_salary=#{rsalary},
+		r_type=#{rtype},r_num=#{rnum},r_place=#{rplace},r_desc=#{rdesc}
+		where r_id=#{rid}
+	</update>
+
+	<!-- 删除信息 -->
+	<delete id="delRecruit" parameterType="Integer">
+		delete from recruit where r_id in
+		<foreach item="rid" collection="array" open="(" separator=","
+			close=")">
+			#{rid}
+		</foreach>
+	</delete>
+
+	
+</mapper>

@@ -1,0 +1,10 @@
+package com.wls.service;
+
+import com.wls.entity.User;
+
+public interface UserService {
+	public int addUser(User user);
+	public User selectByEmail(String email);
+	public String selectSafe(String email);
+	public int updateSafe(User user);
+}

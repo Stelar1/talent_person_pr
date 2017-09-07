@@ -1,0 +1,23 @@
+/*标题栏开始*/
+#head{
+    height:40px;
+    background-color:#4C4C4C;
+    width:100%;
+}
+.mytitle{
+    line-height:40px;
+    font-size:18px;
+    height:40px;
+    color:white;
+    display:inline;
+}
+#head a{
+    float:right;
+    font-weight:bold;
+    padding-right:15px;
+}
+#head p{
+    margin:0px;
+    margin-left:20px;
+}
+/*标题栏结束*/

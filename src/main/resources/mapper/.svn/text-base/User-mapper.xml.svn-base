@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.UserDao">
+
+	<!-- 配置二级缓存，容量及能否被修改 -->
+	<cache readOnly="true" size="10000">
+	</cache>
+
+	<!-- 配置实体类与数据库表的映射关系 -->
+	<resultMap type="user" id="baseUserResultMap">
+		<result column="email" property="email"/>
+		<result column="password" property="password"/>
+		<result column="access" property="access"/>
+		<result column="safe" property="safe"/>
+	</resultMap>
+	<insert id="addUser" parameterType="user">
+		insert into user(email,password,access) values(#{email},#{password},#{access}); 
+	</insert>
+	<select id="selectByEmail" parameterType="String" resultType="user">
+		select * from USER where email=#{email}
+	</select>
+	<select id="selectSafe" parameterType="String" resultType="String">
+		select safe from USER where email=#{email}
+	</select>
+	<update id="updateSafe" parameterType="user">
+		update USER set safe=#{safe} where email=#{email}
+	</update>
+</mapper>

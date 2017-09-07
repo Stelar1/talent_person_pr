@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.AdminDao">
+
+	<!-- 配置二级缓存，容量及能否被修改 -->
+	<cache readOnly="true" size="10000">
+	</cache>
+
+	<!-- 配置实体类与数据库表的映射关系 -->
+
+
+	<resultMap type="admin" id="baseUserResultMap">
+		<result column="a_id" property="a_id" />
+		<result column="a_password" property="a_password" />
+		<result column="a_sex" property="a_sex" />
+		<result column="a_name" property="a_name" />
+		<result column="a_safe" property="a_safe" />
+	</resultMap>
+
+	<!-- 查询管理员 -->
+	<select id="selectById" parameterType="String" resultType="admin">
+		select * from admin where a_id=#{a_id}
+	</select>
+
+
+	<!-- 统计信息的数量 -->
+	<select id="getTotalAdmin" resultType="int">
+		select count(1) from admin
+		<include refid="whereConstant" />
+
+	</select>
+
+	<!--查询所有用户信息 -->
+	<select id="getAdminPager" resultMap="baseUserResultMap">
+		select * from admin
+		<include refid="whereConstant" />
+		limit #{start},#{limit}
+	</select>
+	<sql id="whereConstant">
+		<trim prefix="where" prefixOverrides="and||or">
+			<if test="a_id != null and a_id !=''">
+				and a_id like concat("%",#{a_id},"%")
+			</if>
+			<if test="a_name != null and a_name != ''">
+				and a_name like concat("%", #{a_name}, "%")
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 删除用户 -->
+	<delete id="delAdmin" parameterType="String">
+		delete from admin where a_id in
+		<foreach item="a_id" collection="array" open="(" separator=","
+			close=")">
+			#{a_id}
+		</foreach>
+	</delete>
+
+
+</mapper>

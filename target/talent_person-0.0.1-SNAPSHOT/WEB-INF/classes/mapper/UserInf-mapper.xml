@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wls.dao.UserInfDao">
+
+	<!-- 配置实体类与数据库表的映射关系 -->
+	<resultMap type="userinf" id="inf">
+		<id column="email" property="email"/>
+		<result column="u_workPlace" property="uworkPlace"/>
+		<result column="u_job" property="ujob"/>
+		<result column="u_name" property="uname"/>
+		<result column="u_sex" property="usex"/>
+		<result column="u_birth" property="ubirth"/>
+		<result column="u_homePlace" property="uhomePlace"/>
+		<result column="u_edu" property="uedu"/>
+		<result column="u_imag" property="uimag"/>
+		<result column="u_phone" property="uphone"/>
+	</resultMap>
+	<insert id="add" parameterType="userinf">
+		insert into userinf values
+		(#{email},#{uworkPlace},#{ujob},#{uname},#{usex},#{ubirth},#{uhomePlace},#{uedu},#{uimag},#{uphone}); 
+	</insert>
+	<update id="updateinf" parameterType="userinf">
+		update userinf set u_workPlace=#{uworkPlace},u_job=#{ujob},u_name=#{uname},u_sex=#{usex}
+		,u_birth=#{ubirth},u_homePlace=#{uhomePlace},u_edu=#{uedu},u_imag=#{uimag},u_phone=#{uphone}
+		where email=#{email};
+	</update>
+	<select id="selectById" parameterType="String" resultMap="inf">
+		select * from userinf where email=#{email}
+	</select>
+	
+	<!-- 统计信息的数量 -->
+	<select id="getTotalUserInf" resultType="int">
+		select count(1) from userinf
+		<include refid="whereConstant" />
+	</select>
+
+	<!--查询满足条件的用户信息 -->
+	<select id="getUserInfPager" resultMap="inf">
+		select * from userinf
+		<include refid="whereConstant" />
+		limit #{start},#{limit}
+	</select>
+
+	<!-- 查询条件 -->
+	<sql id="whereConstant">
+		<trim prefix="where" prefixOverrides="and||or">
+			<if test="uname != null and uname !=''">
+				and u_name like concat("%",#{uname},"%")
+			</if>
+			<if test="uedu != null and uedu !=''">
+				and u_edu like concat("%",#{uedu},"%")
+			</if>
+			<if test="ujob != null and ujob != ''">
+				and u_job like concat("%",#{ujob},"%")
+			</if>
+			<if test="uworkPlace != null and  uworkPlace != ''">
+				and u_workPlace like concat("%",#{uworkPlace},"%")
+			</if>
+			<if test="ubirth != null and ubirth != ''">
+				and u_birth like concat("%",#{ubirth},"%")
+			</if>
+		</trim>
+	</sql>
+	<!-- 根据Email查询信息 -->
+	<select id="showUserinfo" resultMap="inf">
+	
+	select * from userinf where email=#{email}
+	</select>
+	
+	
+</mapper>

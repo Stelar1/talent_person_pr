@@ -1,0 +1,9 @@
+package com.wls.dao;
+
+import com.wls.entity.UserInf;
+
+public interface UserInfDao {
+	public int add(UserInf userInf);
+	public UserInf selectById(String email);
+	public int updateInf(String email);
+}
